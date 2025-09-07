@@ -1,0 +1,68 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "notFound": "Page non trouvée",
+    "backToHome": "Retour à l'accueil",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "about": "À propos",
+    "contact": "Contact",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "profile": "Profil",
+    "settings": "Paramètres"
+  },
+  "home": {
+    "title": "Bienvenue sur notre plateforme",
+    "subtitle": "La meilleure solution pour vos besoins",
+    "ctaText": "Commencer",
+    "ctaLink": "/inscription"
+  },
+  "features": {
+    "title": "Nos fonctionnalités",
+    "subtitle": "Découvrez ce qui nous rend spéciaux",
+    "feature1": {
+      "title": "Performance rapide",
+      "description": "Temps de chargement ultra-rapides et interactions fluides"
+    },
+    "feature2": {
+      "title": "Sécurisé",
+      "description": "Sécurité de niveau entreprise pour protéger vos données"
+    },
+    "feature3": {
+      "title": "Facile à utiliser",
+      "description": "Interface intuitive conçue pour la meilleure expérience utilisateur"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "email": "Email",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "forgotPassword": "Mot de passe oublié ?",
+      "noAccount": "Vous n'avez pas de compte ?",
+      "signUp": "S'inscrire"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "name": "Nom complet",
+      "email": "Email",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "submit": "Créer un compte",
+      "hasAccount": "Vous avez déjà un compte ?",
+      "signIn": "Se connecter"
+    }
+  }
+} 

@@ -1,26 +1,105 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #141414;
+  --background-light: #1a1a1a;
+  --foreground: #1a1a1a;
+  --primary: #b6b6b6;
+  --primary-dark: #a0a0a0;
+  --primary-light: #e0e0e0;
+  --accent: #4a90e2;
+  --accent-dark: #357abd;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  
+  /* Metallic Silver Variables */
+  --metallic-silver-background: radial-gradient(ellipse at center, #5e5d5d 0%, #000000 100%);
+  --metallic-silver-text: linear-gradient(to bottom, #cccccc 22%, #474747 24%, #b8b8b8 26%, #b8b8b8 27%, #d9d9d9 40%, #3e3e3e 78%);
+  --metallic-silver-shadow: -1px 0 1px #b3b3b3, 0 1px 1px #b3b3b3, 5px 5px 10px rgba(0, 0, 0, 0.4), -5px -5px 10px rgba(0, 0, 0, 0.4);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-light: var(--background-light);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-light: var(--primary-light);
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  /* Metallic Silver Colors */
+  --color-metallic-silver-background: var(--metallic-silver-background);
+  --color-metallic-silver-text: var(--metallic-silver-text);
+  --color-metallic-silver-shadow: var(--metallic-silver-shadow);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--primary-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+/* Metallic Silver Utility Classes */
+.bg-metallic-silver-background {
+  background: var(--metallic-silver-background);
+}
+
+.text-metallic-silver {
+  background: linear-gradient(#ccc 2%, #777 24%, #b8b8b8 52%, #b8b8b8 27%, #d9d9d9 5%, #3e3e3e 79%) 0 .5rem;
+  background-position: 0 0.5rem;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #fff;
+  font-family: 'Playfair Display', serif;
+  position: relative;
+  text-transform: uppercase;
+  font-size: 2rem;
+  margin: 0;
+  font-weight: 400;
+}
+
+.layer1 {
+  display: block;
+  width: 100%;
+  background: none;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  position: absolute;
+  text-shadow: 
+    -1px 0 1px #b3b3b3, 0 1px 1px #b3b3b3,
+    2px 2px 4px rgba(0, 0, 0, 0.4),
+    -2px -2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.main-hero-image {
+  mask-image: linear-gradient(to bottom, transparent, black 15%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%);
 }

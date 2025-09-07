@@ -1,0 +1,68 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "notFound": "Page not found",
+    "backToHome": "Back to Home",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "home": {
+    "title": "Welcome to Our Platform",
+    "subtitle": "The best solution for your needs",
+    "ctaText": "Get Started",
+    "ctaLink": "/signup"
+  },
+  "features": {
+    "title": "Our Features",
+    "subtitle": "Discover what makes us special",
+    "feature1": {
+      "title": "Fast Performance",
+      "description": "Lightning fast loading times and smooth interactions"
+    },
+    "feature2": {
+      "title": "Secure",
+      "description": "Enterprise-grade security to protect your data"
+    },
+    "feature3": {
+      "title": "Easy to Use",
+      "description": "Intuitive interface designed for the best user experience"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "forgotPassword": "Forgot Password?",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up"
+    },
+    "register": {
+      "title": "Create Account",
+      "name": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign In"
+    }
+  }
+} 
