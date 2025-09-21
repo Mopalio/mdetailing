@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     
     // Send email to customer
     const customerEmail = await resend.emails.send({
-      from: 'M Detailing <onboarding@resend.dev>',
+      from: 'M Detailing <contact@mdetailing.lu>',
       to: [email],
       subject: 'Appointment Confirmation - M Detailing',
       html: `
@@ -46,8 +46,8 @@ export async function POST(request: NextRequest) {
     
     // Send notification email to business
     const businessEmail = await resend.emails.send({
-      from: 'M Detailing <onboarding@resend.dev>',
-      to: [email],
+      from: 'M Detailing <contact@mdetailing.lu>',
+      to: ["mdetailing2025@gmail.com"],
       subject: 'New Appointment Booking',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

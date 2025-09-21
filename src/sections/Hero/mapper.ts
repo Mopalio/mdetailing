@@ -6,6 +6,7 @@ export interface HeroData {
   subtitle: string;
   ctaText: string;
   ctaLink: string;
+  imageUrl: string;
 }
 
 export function HeroMapper(data: HeroData) {

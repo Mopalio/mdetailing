@@ -47,7 +47,7 @@ export function Rewards({ title, subtitle, tiers, currentWashes }: RewardsProps)
           <Card className="bg-gradient-to-r from-accent to-accent-dark text-white">
             <CardHeader className="text-center">
               <h3 className="text-2xl font-bold mb-2">Your Progress</h3>
-              <p className="opacity-90">You've completed {currentWashes} washes</p>
+              <p className="opacity-90">You&apos;ve completed {currentWashes} washes</p>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

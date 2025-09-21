@@ -104,8 +104,8 @@ export function Appointment({ title, subtitle }: AppointmentProps) {
                         </div>
                         <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Appointment Booked!</h2>
                         <p className="text-slate-600 dark:text-slate-400">
-                            Thank you for choosing our service. We'll contact you shortly to confirm your appointment.<br />
-                            Check your spam folder if you don't see it.
+                            Thank you for choosing our service. We&apos;ll contact you shortly to confirm your appointment.<br />
+                            Check your spam folder if you don&apos;t see it.
                         </p>
                     </div>
                 </div>
@@ -129,7 +129,7 @@ export function Appointment({ title, subtitle }: AppointmentProps) {
                         <CardHeader className="text-center">
                             <h3 className="text-2xl font-bold text-white">Book Your Car Wash</h3>
                             <p className="text-primary">
-                                Fill out the form below and we'll get back to you within 24 hours
+                                Fill out the form below and we&apos;ll get back to you within 24 hours
                             </p>
                         </CardHeader>
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 
 interface GalleryImage {
     id: string;
@@ -15,7 +14,7 @@ interface GalleryProps {
     images: GalleryImage[];
 }
 
-export function Gallery({ title, subtitle, images }: GalleryProps) {
+export function Gallery({ title }: GalleryProps) {
     return (
         <section className="py-20 border-b border-t border-gray-700">
             <div className="container mx-auto px-4">

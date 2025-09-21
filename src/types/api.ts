@@ -1,4 +1,4 @@
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data: T;
   message?: string;
   success: boolean;
@@ -26,5 +26,5 @@ export interface QueryParams {
   search?: string;
   sort?: string;
   order?: 'asc' | 'desc';
-  [key: string]: any;
+  [key: string]: unknown;
 } 

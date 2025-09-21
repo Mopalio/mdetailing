@@ -1,6 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { Card, CardHeader } from '@/components/ui/Card';
 
 interface PricingTier {
   id: string;
