@@ -5,11 +5,16 @@ import { Appointment } from '@/sections/Appointment';
 
 export default function Home() {
   const heroData = {
-    title: "MDetailing",
-    subtitle: "Experience the finest car washing service with our state-of-the-art equipment and eco-friendly products. Your car deserves the best care.",
-    ctaText: "Book Now",
+    eyebrow: "Luxembourg · Mobile detailing",
+    title: "Your car has never been this",
+    titleAccent: "clean",
+    subtitle:
+      "Paint correction, ceramic coating and deep interior work, done at your door. No queue, no tunnel brushes, no swirl marks.",
+    ctaText: "Book a slot",
     ctaLink: "#appointment",
-    imageUrl: "/images/hero_main.webp" // Placeholder image
+    secondaryCtaText: "View pricing",
+    secondaryCtaLink: "#pricing",
+    imageUrl: "/images/hero_main.webp"
   };
 
   const pricingData = {
@@ -116,13 +121,11 @@ export default function Home() {
   };
 
   return (
-    <main className="pt-16">
+    <main>
       <div id="home">
         <Hero {...heroData} />
       </div>
-      <div id="pricing">
-        <Pricing {...pricingData} />
-      </div>
+      <Pricing {...pricingData} />
       <div id="gallery">
         <Gallery {...galleryData} />
       </div>

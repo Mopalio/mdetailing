@@ -1,97 +1,148 @@
 'use client';
-import React from 'react';
-import { Button } from '@/components/ui/Button';
-import Image from 'next/image';
-import Beams from '@/components/ui/Beams';
-import CountUp from '@/components/ui/CountUp';
+
+import React, { useCallback, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { WashPanel, type WashPanelHandle } from '@/components/wash/WashPanel';
 
 interface HeroProps {
-    title: string;
-    subtitle: string;
-    ctaText: string;
-    ctaLink: string;
-    imageUrl: string;
+  eyebrow?: string;
+  title: string;
+  titleAccent?: string;
+  subtitle: string;
+  ctaText: string;
+  ctaLink: string;
+  secondaryCtaText?: string;
+  secondaryCtaLink?: string;
+  imageUrl: string;
 }
 
-export function Hero({ title, subtitle, ctaText, ctaLink, imageUrl }: HeroProps) {
-    return (
-        <section className="relative lg:py-20 py-10 flex items-center justify-center overflow-hidden bg-black">
-            <div className="absolute inset-0">
-                <Beams
-                    beamWidth={2}
-                    beamHeight={15}
-                    beamNumber={12}
-                    lightColor="#ffffff"
-                    speed={2}
-                    noiseIntensity={1.75}
-                    scale={0.2}
-                    rotation={0}
-                />
-            </div>
-            <div className="container mx-auto px-4 lg:py-16 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-12 gap-0 items-center">
-                    {/* Content */}
-                    <div className="text-center lg:text-left">
-                        <h1 className="text-metallic-silver mb-6">
-                            {title}
-                            <span
-                                className="layer1"
-                                aria-hidden="true"
-                            >
-                                {title}
-                            </span>
-                        </h1>
-                        <p className="lg:text-xl text-base text-slate-200 mb-8 max-w-2xl mx-auto lg:mx-0">{subtitle}</p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                            <Button
-                                size="lg"
-                                variant="secondary"
-                            >
-                                <a href={ctaLink}>{ctaText}</a>
-                            </Button>
-                            <Button
-                                size="lg"
-                                variant="outline"
-                            >
-                                <a href="#pricing">View Pricing</a>
-                            </Button>
-                        </div>
-                    </div>
+export function Hero({
+  eyebrow = 'Luxembourg · Mobile detailing',
+  title,
+  titleAccent,
+  subtitle,
+  ctaText,
+  ctaLink,
+  secondaryCtaText = 'View pricing',
+  secondaryCtaLink = '#pricing',
+  imageUrl,
+}: HeroProps) {
+  const [percent, setPercent] = useState(0);
+  const panelRef = useRef<WashPanelHandle>(null);
+  const reduced = useReducedMotion();
 
-                    {/* Image */}
-                    <div className="relative">
-                        <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                            <Image
-                                src={imageUrl}
-                                alt="Professional car washing service"
-                                width={600}
-                                height={400}
-                                className="w-full h-auto object-cover main-hero-image"
-                                priority
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                        </div>
+  const onProgress = useCallback((p: number) => setPercent(p), []);
 
-                        {/* Floating Stats */}
-                        <div className="absolute max-w-[150px] lg:-bottom-6 lg:-left-6 bottom-0 right-0 bg-metallic-silver-background rounded-lg shadow-xl p-4 border border-slate-400">
-                            <div className="text-center">
-                                <div className="text-2xl font-bold text-white">
-                                    +
-                                    <CountUp
-                                        from={0}
-                                        to={87}
-                                        separator=","
-                                        direction="up"
-                                        duration={1}
-                                        className="count-up-text"
-                                    />
-                                </div>
-                                <div className="text-sm text-slate-200">Happy Customers</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
+  /* the copy rises once, on load. framer-motion owns this so there
+     is no hand-rolled rAF left in the section itself. */
+  const rise = {
+    hidden: { opacity: 0, y: reduced ? 0 : 18 },
+    show: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: reduced ? 0 : 0.7,
+        delay: reduced ? 0 : 0.12 + i * 0.08,
+        ease: [0.22, 1, 0.36, 1] as const,
+      },
+    }),
+  };
+
+  return (
+    <section className="hero--bleed">
+      <div className="hero__media">
+        <WashPanel
+          ref={panelRef}
+          imageUrl={imageUrl}
+          alt="A car being pressure washed clean"
+          onProgress={onProgress}
+        />
+      </div>
+
+      <div className="hero__scrim" aria-hidden="true" />
+
+      <div className="hero__over">
+        <div className="hero__overIn">
+          <motion.p
+            className="flex items-center gap-2.5 text-[0.68rem] font-medium uppercase tracking-[0.24em] text-fg-mid"
+            variants={rise}
+            initial="hidden"
+            animate="show"
+            custom={0}
+          >
+            <span className="inline-block h-1.5 w-1.5 bg-chrome-200" />
+            {eyebrow}
+          </motion.p>
+
+          <motion.h1
+            className="mt-5 mb-5 text-[clamp(2.4rem,6.4vw,5rem)] font-light leading-[0.98] tracking-[-0.03em] text-fg"
+            variants={rise}
+            initial="hidden"
+            animate="show"
+            custom={1}
+          >
+            {title}
+            {titleAccent ? (
+              <>
+                {' '}
+                <span className="text-metallic-silver inline-block font-normal">
+                  {titleAccent}
+                </span>
+              </>
+            ) : null}
+          </motion.h1>
+
+          <motion.p
+            className="mb-8 max-w-[46ch] text-base leading-relaxed text-fg-mid lg:text-lg"
+            variants={rise}
+            initial="hidden"
+            animate="show"
+            custom={2}
+          >
+            {subtitle}
+          </motion.p>
+
+          <motion.div
+            className="flex flex-wrap gap-3"
+            variants={rise}
+            initial="hidden"
+            animate="show"
+            custom={3}
+          >
+            <a
+              href={ctaLink}
+              className="inline-flex items-center gap-2.5 rounded-[2px] bg-accent px-6 py-3.5 text-sm font-semibold tracking-tight text-on-accent transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              <span className="inline-block h-1.5 w-1.5 bg-on-accent" />
+              {ctaText}
+            </a>
+            <a
+              href={secondaryCtaLink}
+              className="inline-flex items-center rounded-[2px] border border-line-2 px-6 py-3.5 text-sm font-medium text-fg transition-colors duration-300 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              {secondaryCtaText}
+            </a>
+          </motion.div>
+        </div>
+
+        <motion.div
+          className="hero__gauge"
+          variants={rise}
+          initial="hidden"
+          animate="show"
+          custom={4}
+        >
+          <div className="meter">
+            <span style={{ width: percent + '%' }} />
+          </div>
+          <div className="meter__val">
+            <b>{percent}</b>% clean
+          </div>
+          <button type="button" className="reset" onClick={() => panelRef.current?.reset()}>
+            Dirty it again
+          </button>
+        </motion.div>
+      </div>
+    </section>
+  );
 }
