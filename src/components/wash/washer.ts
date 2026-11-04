@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   washer.ts — the pressure washer.
+   washer.ts: the pressure washer.
 
    A canvas holds a dulled, grimy copy of the hero photo. It is
    erased with destination-out so the clean image underneath shows

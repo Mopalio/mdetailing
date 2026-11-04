@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CardSwiper } from '@/components/ui/CardSwiper';
+import { TiltCard } from '@/components/ui/TiltCard';
 
 interface PricingTier {
   id: string;
@@ -36,15 +37,11 @@ export function Pricing({ title, subtitle, tiers }: PricingProps) {
 
         <CardSwiper label="Pricing packages">
           {tiers.map((tier, i) => (
-            <motion.article
+            /* the entrance transform lives out here and the tilt lives on
+               the TiltCard, so the two never write the same inline style */
+            <motion.div
               key={tier.id}
-              className={[
-                'group relative flex flex-col rounded-[4px] border bg-gradient-to-b from-ink-2 to-ink-1 p-7',
-                'transition-[transform,border-color,box-shadow] duration-500 hover:-translate-y-2',
-                tier.popular
-                  ? 'border-chrome-400/60 shadow-[0_36px_80px_-40px_rgba(233,238,240,0.35)]'
-                  : 'border-line hover:border-chrome-400/45',
-              ].join(' ')}
+              className="h-full"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
@@ -53,6 +50,15 @@ export function Pricing({ title, subtitle, tiers }: PricingProps) {
                 delay: i * 0.08,
                 ease: [0.22, 1, 0.36, 1],
               }}
+            >
+            <TiltCard
+              as="article"
+              className={[
+                'group relative flex h-full flex-col rounded-[4px] border bg-gradient-to-b from-ink-2 to-ink-1 p-7',
+                tier.popular
+                  ? 'border-chrome-400/60 shadow-[0_36px_80px_-40px_rgba(233,238,240,0.35)]'
+                  : 'border-line',
+              ].join(' ')}
             >
               {tier.popular ? (
                 <span className="absolute right-6 top-0 -translate-y-1/2 rounded-[2px] bg-accent px-2.5 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.18em] text-on-accent">
@@ -86,13 +92,14 @@ export function Pricing({ title, subtitle, tiers }: PricingProps) {
                   'mt-8 inline-flex items-center justify-center rounded-[2px] px-5 py-3 text-sm font-semibold',
                   'transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
                   tier.popular
-                    ? 'bg-accent text-on-accent hover:bg-chrome-200'
-                    : 'border border-line-2 text-fg hover:bg-white/10',
+                    ? 'bg-accent text-on-accent hover:bg-chrome-200 hover:shadow-[0_10px_30px_-8px_rgba(255,255,255,0.45)]'
+                    : 'border border-line-2 text-fg hover:border-chrome-200 hover:bg-white/12',
                 ].join(' ')}
               >
                 Book {tier.name.toLowerCase()}
               </a>
-            </motion.article>
+            </TiltCard>
+            </motion.div>
           ))}
         </CardSwiper>
 

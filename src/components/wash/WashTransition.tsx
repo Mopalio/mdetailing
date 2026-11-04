@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 /* ═══════════════════════════════════════════════════════════════
-   WashTransition — the wash, ported from design/js/transition.js.
+   WashTransition: the wash, ported from design/js/transition.js.
 
-   A foam sheet is already down on first paint. It counts up, then
-   a squeegee pulls it off top to bottom, trailing drips.
+   A foam sheet is already down on first paint, with suds drifting
+   through it, water streaking down it and bubbles rising. It counts
+   up, then a squeegee blade pulls the sheet off top to bottom,
+   dragging a wave of foam along its edge and leaving drips behind.
 
    Two deliberate changes from the prototype:
 
@@ -29,12 +31,38 @@ const SESSION_KEY = 'md-washed';
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
+/* Seeded so the server and the client lay the bubbles out identically.
+   Math.random() here would be a hydration mismatch, and it would also
+   mean no bubbles at all until the effect had run. */
+function seeded(seed: number) {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const BUBBLES = (() => {
+  const r = seeded(20260227);
+  return Array.from({ length: 28 }, () => {
+    const size = 5 + r() * 26;
+    return {
+      width: size.toFixed(0) + 'px',
+      height: size.toFixed(0) + 'px',
+      left: (r() * 100).toFixed(1) + '%',
+      ['--d' as string]: (5 + r() * 6).toFixed(1) + 's',
+      ['--delay' as string]: (-r() * 8).toFixed(1) + 's',
+      ['--sway' as string]: (r() * 46 - 23).toFixed(0) + 'px',
+    } as React.CSSProperties;
+  });
+})();
+
 export function WashTransition() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const bubblesRef = useRef<HTMLDivElement>(null);
   const dripsRef = useRef<HTMLDivElement>(null);
-  const numRef = useRef<HTMLDivElement>(null);
-  const [bubbles, setBubbles] = useState<React.CSSProperties[]>([]);
+  const numRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const el = rootRef.current;
@@ -67,18 +95,6 @@ export function WashTransition() {
       /* nothing to do: it just plays again next time */
     }
 
-    /* bubbles only exist while the curtain does */
-    setBubbles(
-      Array.from({ length: 26 }, () => ({
-        width: (5 + Math.random() * 26).toFixed(0) + 'px',
-        height: (5 + Math.random() * 26).toFixed(0) + 'px',
-        left: (Math.random() * 100).toFixed(1) + '%',
-        ['--d' as string]: (5 + Math.random() * 6).toFixed(1) + 's',
-        ['--delay' as string]: (-Math.random() * 8).toFixed(1) + 's',
-        ['--sway' as string]: (Math.random() * 46 - 23).toFixed(0) + 'px',
-      }))
-    );
-
     document.documentElement.classList.add('is-washing');
     el.classList.add('is-on', 'is-intro');
 
@@ -104,6 +120,7 @@ export function WashTransition() {
         timers.push(setTimeout(r, ms));
       });
 
+    /* a drop of water left hanging off the blade */
     const dripAt = (yPct: number) => {
       const drips = dripsRef.current;
       if (!drips) return;
@@ -123,7 +140,7 @@ export function WashTransition() {
       el.classList.add('is-wiping');
       el.style.setProperty('--cover', '100%');
       let lastDrip = 0;
-      return run(950, easeInOut, (v) => {
+      return run(1050, easeInOut, (v) => {
         const p = v * 100;
         el.style.setProperty('--y', p + '%');
         el.style.setProperty('--edge', p + '%');
@@ -139,16 +156,15 @@ export function WashTransition() {
         timers.push(
           setTimeout(() => {
             if (dripsRef.current) dripsRef.current.innerHTML = '';
-            setBubbles([]);
           }, 1600)
         );
       });
     };
 
-    run(1100, easeOut, (v) => {
-      if (numRef.current) numRef.current.firstChild!.textContent = String(Math.round(v * 100));
+    run(1250, easeOut, (v) => {
+      if (numRef.current) numRef.current.textContent = String(Math.round(v * 100));
     })
-      .then(() => wait(180))
+      .then(() => wait(200))
       .then(wipe);
 
     return () => {
@@ -170,16 +186,29 @@ export function WashTransition() {
         aria-hidden="true"
         style={{ ['--cover' as string]: '100%', ['--y' as string]: '0%' }}
       >
-        <div className="wash__sheet" />
-        <div className="wash__bubbles" ref={bubblesRef}>
-          {bubbles.map((style, i) => (
-            <i key={i} className="bub" style={style} />
-          ))}
+        <div className="wash__sheet">
+          <div className="wash__foam" />
+          <div className="wash__bubbles">
+            {BUBBLES.map((style, i) => (
+              <i key={i} className="bub" style={style} />
+            ))}
+          </div>
+          <div className="wash__streaks" />
         </div>
-        <div className="wash__edge" />
+
+        <div className="wash__blade">
+          <div className="wash__wave" />
+          <div className="wash__glow" />
+        </div>
+
         <div className="wash__drips" ref={dripsRef} />
-        <div className="wash__num" ref={numRef}>
-          <span>0</span>
+
+        <div className="wash__count">
+          <div className="wash__num">
+            <span ref={numRef}>0</span>
+            <i>%</i>
+          </div>
+          <div className="wash__word">MDetailing</div>
         </div>
       </div>
     </>

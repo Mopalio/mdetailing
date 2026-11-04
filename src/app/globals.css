@@ -2,7 +2,7 @@
 @import "./wash.css";
 
 /* ═══════════════════════════════════════════════════════════════
-   MDetailing — tokens
+   MDetailing: tokens
 
    There is no logo file. The brand mark is the word MDetailing set
    in polished chrome on near-black, so the palette is taken from
@@ -55,6 +55,8 @@
   --stage: rgba(233, 238, 240, 0.1);
   --panel-1: #0f1113;
   --panel-2: #050607;
+  --sheet-1: #0e1012;
+  --sheet-2: #191d20;
 
   --success: #6ee7b7;
   --warning: #fcd34d;
