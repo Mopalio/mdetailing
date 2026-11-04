@@ -5,11 +5,16 @@ import { Appointment } from '@/sections/Appointment';
 
 export default function Home() {
   const heroData = {
-    title: "MDetailing",
-    subtitle: "Experience the finest car washing service with our state-of-the-art equipment and eco-friendly products. Your car deserves the best care.",
-    ctaText: "Book Now",
+    eyebrow: "Luxembourg · Mobile detailing",
+    title: "Your car has never been this",
+    titleAccent: "clean",
+    subtitle:
+      "Paint correction, ceramic coating and deep interior work, done at your door. No queue, no tunnel brushes, no swirl marks.",
+    ctaText: "Book a slot",
     ctaLink: "#appointment",
-    imageUrl: "/images/hero_main.webp" // Placeholder image
+    secondaryCtaText: "View pricing",
+    secondaryCtaLink: "#pricing",
+    imageUrl: "/images/hero_main.webp"
   };
 
   const pricingData = {
@@ -60,81 +65,31 @@ export default function Home() {
   };
 
   const galleryData = {
-    title: "Our Work",
-    subtitle: "See the amazing results our professional car washing service delivers. Every vehicle leaves our facility looking its absolute best.",
-    images: [
-      {
-        id: "1",
-        src: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=300&fit=crop&crop=center",
-        alt: "Clean sedan after wash",
-        title: "Sedan Wash",
-        description: "Complete exterior and interior cleaning"
-      },
-      {
-        id: "2",
-        src: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&h=300&fit=crop&crop=center",
-        alt: "SUV after professional wash",
-        title: "SUV Detail",
-        description: "Premium wash with wax protection"
-      },
-      {
-        id: "3",
-        src: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&h=300&fit=crop&crop=center",
-        alt: "Luxury car after wash",
-        title: "Luxury Car Care",
-        description: "Premium detailing service"
-      },
-      {
-        id: "4",
-        src: "https://images.unsplash.com/photo-1563720223185-11003d516935?w=400&h=300&fit=crop&crop=center",
-        alt: "Truck after wash",
-        title: "Truck Wash",
-        description: "Complete truck cleaning service"
-      },
-      {
-        id: "5",
-        src: "https://images.unsplash.com/photo-1549924231-f129b911e442?w=400&h=300&fit=crop&crop=center",
-        alt: "Van after wash",
-        title: "Van Detail",
-        description: "Professional van cleaning"
-      },
-      {
-        id: "6",
-        src: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&h=300&fit=crop&crop=center",
-        alt: "Sports car after wash",
-        title: "Sports Car Care",
-        description: "Specialized sports car cleaning"
-      }
-    ]
+    title: "Before, and after.",
+    subtitle:
+      "Every pair is the same vehicle twice. Drag the divider to see what comes off."
   };
 
-
-
   const appointmentData = {
-    title: "Book Your Appointment",
-    subtitle: "Schedule your car wash today and experience the difference our professional service makes."
+    title: "Let's get it filthy clean.",
+    subtitle:
+      "Tell us the car and the postcode. We confirm a slot the same day."
   };
 
   return (
-    <main className="pt-16">
+    <main>
       <div id="home">
         <Hero {...heroData} />
       </div>
-      <div id="pricing">
-        <Pricing {...pricingData} />
-      </div>
-      <div id="gallery">
-        <Gallery {...galleryData} />
-      </div>
+      <Pricing {...pricingData} />
+      <Gallery {...galleryData} />
       {/* <div id="team">
         <Team {...teamData} />
       </div>
       <div id="rewards">
         <Rewards {...rewardsData} />
       </div> */}
-      <div id="appointment">
-        <Appointment {...appointmentData} />
-      </div>
+      <Appointment {...appointmentData} />
     </main>
   );
 }

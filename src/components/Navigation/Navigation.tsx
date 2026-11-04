@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
+import { washTo } from '@/components/wash/washController';
 
 interface NavigationProps {
   className?: string;
@@ -21,14 +22,16 @@ export function Navigation({ className }: NavigationProps) {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
     setIsMobileMenuOpen(false);
+    const element = document.getElementById(sectionId);
+    if (!element) return;
+    /* The move happens behind the curtain, so the scroll is instant:
+       a smooth scroll would still be gliding when the curtain lifts.
+       Without a curtain washTo just runs it, so the menu still works. */
+    washTo(() => {
+      element.scrollIntoView({ behavior: 'auto', block: 'start' });
+      history.replaceState(null, '', '#' + sectionId);
+    });
   };
 
   const navItems = [
@@ -42,10 +45,10 @@ export function Navigation({ className }: NavigationProps) {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-[#141414]' 
-        : 'bg-[#141414]'
-    } ${className}`}>
+      isScrolled
+        ? 'bg-ink/85 backdrop-blur-md border-b border-line'
+        : 'bg-gradient-to-b from-black/55 to-transparent'
+    } ${className ?? ''}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}

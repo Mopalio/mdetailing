@@ -1,51 +1,141 @@
 @import "tailwindcss";
+@import "./wash.css";
+
+/* ═══════════════════════════════════════════════════════════════
+   MDetailing: tokens
+
+   There is no logo file. The brand mark is the word MDetailing set
+   in polished chrome on near-black, so the palette is taken from
+   that wordmark's own gradient. Its stops are the ramp:
+
+     #d9d9d9  #cccccc  #b8b8b8  #777777  #3e3e3e   plus #b3b3b3 rim
+
+   That makes this a no-accent-hue palette. Hierarchy is luminosity:
+   dim body text, pure white for the thing that matters. The old
+   #4a90e2 is gone because it was never part of the mark.
+   ═══════════════════════════════════════════════════════════ */
 
 :root {
-  --background: #141414;
-  --background-light: #1a1a1a;
-  --foreground: #1a1a1a;
-  --primary: #b6b6b6;
-  --primary-dark: #a0a0a0;
-  --primary-light: #e0e0e0;
-  --accent: #4a90e2;
-  --accent-dark: #357abd;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  
-  /* Metallic Silver Variables */
+  /* ── ink: the near-black the chrome sits on ───────────────── */
+  --ink: #0b0c0d;
+  --ink-1: #141517;
+  --ink-2: #1b1d1f;
+  --ink-3: #24272a;
+
+  /* ── chrome: sampled from the wordmark gradient ───────────── */
+  --chrome-50:  #ffffff;
+  --chrome-100: #e9edef;
+  --chrome-200: #d9d9d9;
+  --chrome-300: #cccccc;
+  --chrome-400: #b8b8b8;
+  --chrome-500: #9aa0a3;
+  --chrome-600: #777777;
+  --chrome-700: #555555;
+  --chrome-800: #3e3e3e;
+  --chrome-rim: #b3b3b3;
+
+  /* ── text ─────────────────────────────────────────────────── */
+  --fg: #e9edef;
+  --fg-mid: #9aa0a3;
+  --fg-dim: #6b7276;
+
+  /* ── structure ────────────────────────────────────────────── */
+  --line: rgba(255, 255, 255, 0.09);
+  --line-2: rgba(255, 255, 255, 0.2);
+  --hover-surface: rgba(255, 255, 255, 0.08);
+
+  /* ── the high note. No hue: white is the accent ───────────── */
+  --accent: #ffffff;
+  --accent-rgb: 233, 238, 240;
+  --accent-soft: var(--chrome-400);
+  --on-accent: #121416;
+
+  /* ── water. Physical, not brand: white foam and mist ──────── */
+  --foam: #ffffff;
+  --stage: rgba(233, 238, 240, 0.1);
+  --panel-1: #0f1113;
+  --panel-2: #050607;
+  --sheet-1: #0e1012;
+  --sheet-2: #191d20;
+
+  --success: #6ee7b7;
+  --warning: #fcd34d;
+  --error: #ff7a7a;
+
+  --r: 2px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* the wordmark itself, kept as one token */
   --metallic-silver-background: radial-gradient(ellipse at center, #5e5d5d 0%, #000000 100%);
-  --metallic-silver-text: linear-gradient(to bottom, #cccccc 22%, #474747 24%, #b8b8b8 26%, #b8b8b8 27%, #d9d9d9 40%, #3e3e3e 78%);
-  --metallic-silver-shadow: -1px 0 1px #b3b3b3, 0 1px 1px #b3b3b3, 5px 5px 10px rgba(0, 0, 0, 0.4), -5px -5px 10px rgba(0, 0, 0, 0.4);
+  --metallic-silver-text: linear-gradient(
+    to bottom,
+    var(--chrome-300) 22%, var(--chrome-700) 24%, var(--chrome-400) 26%,
+    var(--chrome-400) 27%, var(--chrome-200) 40%, var(--chrome-800) 78%
+  );
+  --metallic-silver-shadow:
+    -1px 0 1px var(--chrome-rim), 0 1px 1px var(--chrome-rim),
+    5px 5px 10px rgba(0, 0, 0, 0.4), -5px -5px 10px rgba(0, 0, 0, 0.4);
+
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-background-light: var(--background-light);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-dark: var(--primary-dark);
-  --color-primary-light: var(--primary-light);
+  /* chrome ramp */
+  --color-chrome-50: var(--chrome-50);
+  --color-chrome-100: var(--chrome-100);
+  --color-chrome-200: var(--chrome-200);
+  --color-chrome-300: var(--chrome-300);
+  --color-chrome-400: var(--chrome-400);
+  --color-chrome-500: var(--chrome-500);
+  --color-chrome-600: var(--chrome-600);
+  --color-chrome-700: var(--chrome-700);
+  --color-chrome-800: var(--chrome-800);
+
+  /* ink ramp */
+  --color-ink: var(--ink);
+  --color-ink-1: var(--ink-1);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+
+  /* text */
+  --color-fg: var(--fg);
+  --color-fg-mid: var(--fg-mid);
+  --color-fg-dim: var(--fg-dim);
+
+  /* structure */
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+
+  /* names the existing sections already use, now pointing at the ramp
+     so nothing in Gallery, Appointment or Navigation goes unstyled */
+  --color-background: var(--ink);
+  --color-background-light: var(--ink-1);
+  --color-foreground: var(--fg);
+  --color-primary: var(--chrome-400);
+  --color-primary-dark: var(--chrome-500);
+  --color-primary-light: var(--chrome-200);
   --color-accent: var(--accent);
-  --color-accent-dark: var(--accent-dark);
+  --color-accent-dark: var(--chrome-400);
+  --color-on-accent: var(--on-accent);
+  --color-foam: var(--foam);
+
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  
-  /* Metallic Silver Colors */
+
   --color-metallic-silver-background: var(--metallic-silver-background);
   --color-metallic-silver-text: var(--metallic-silver-text);
   --color-metallic-silver-shadow: var(--metallic-silver-shadow);
 }
 
-
-
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--ink);
+  color: var(--fg);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 /* Custom scrollbar */
@@ -54,35 +144,33 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--primary-light);
+  background: var(--ink-1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary);
+  background: var(--chrome-700);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-dark);
+  background: var(--chrome-500);
 }
 
-/* Metallic Silver Utility Classes */
+/* ── the wordmark ───────────────────────────────────────────── */
+
 .bg-metallic-silver-background {
   background: var(--metallic-silver-background);
 }
 
 .text-metallic-silver {
-  background: linear-gradient(#ccc 2%, #777 24%, #b8b8b8 52%, #b8b8b8 27%, #d9d9d9 5%, #3e3e3e 79%) 0 .5rem;
-  background-position: 0 0.5rem;
+  background: var(--metallic-silver-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: #fff;
-  font-family: 'Playfair Display', serif;
+  color: var(--chrome-50);
   position: relative;
   text-transform: uppercase;
-  font-size: 2rem;
   margin: 0;
-  font-weight: 400;
 }
 
 .layer1 {
@@ -93,8 +181,8 @@ body {
   top: 0;
   z-index: -1;
   position: absolute;
-  text-shadow: 
-    -1px 0 1px #b3b3b3, 0 1px 1px #b3b3b3,
+  text-shadow:
+    -1px 0 1px var(--chrome-rim), 0 1px 1px var(--chrome-rim),
     2px 2px 4px rgba(0, 0, 0, 0.4),
     -2px -2px 4px rgba(0, 0, 0, 0.4);
 }
