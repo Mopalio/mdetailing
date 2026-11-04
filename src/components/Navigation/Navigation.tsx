@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
+import { washTo } from '@/components/wash/washController';
 
 interface NavigationProps {
   className?: string;
@@ -21,14 +22,16 @@ export function Navigation({ className }: NavigationProps) {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
     setIsMobileMenuOpen(false);
+    const element = document.getElementById(sectionId);
+    if (!element) return;
+    /* The move happens behind the curtain, so the scroll is instant:
+       a smooth scroll would still be gliding when the curtain lifts.
+       Without a curtain washTo just runs it, so the menu still works. */
+    washTo(() => {
+      element.scrollIntoView({ behavior: 'auto', block: 'start' });
+      history.replaceState(null, '', '#' + sectionId);
+    });
   };
 
   const navItems = [

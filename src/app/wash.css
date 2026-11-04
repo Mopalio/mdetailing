@@ -797,8 +797,17 @@
   color: var(--fg-dim);
 }
 
+/* While the curtain is down the page must not animate its own
+   scrolling, or a smooth scroll would still be gliding when the
+   curtain lifts. The scroll lock is deliberately NOT here: a move
+   between sections happens behind the curtain, and overflow hidden
+   on the scrolling element makes that programmatic scroll a no-op.
+   Only the intro, which goes nowhere, locks scrolling. */
 html.is-washing {
   scroll-behavior: auto;
+}
+
+html.is-booting {
   overflow: hidden;
 }
 

@@ -89,9 +89,7 @@ export default function Home() {
       <div id="rewards">
         <Rewards {...rewardsData} />
       </div> */}
-      <div id="appointment">
-        <Appointment {...appointmentData} />
-      </div>
+      <Appointment {...appointmentData} />
     </main>
   );
 }
