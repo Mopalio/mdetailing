@@ -1131,3 +1131,472 @@ html.is-washing {
   .card__after,
   .card__swipe { transition: none; }
 }
+
+
+/* ───────────────────────────────────────────────────────────────
+   BUTTONS: water rises up them on hover
+
+   Ported from the .btn block in design/css/style.css, which fills a
+   button from the bottom on hover. Here the rising fill carries a
+   wave crest on top of it, cut from the same wave the squeegee
+   drags across the loader, so the button fills like a glass rather
+   than wiping like a blind. The crest is white because the accent
+   in this palette is white; there is no hue to match.
+   ─────────────────────────────────────────────────────────── */
+
+.btn {
+  --btn-bg: transparent;
+  --btn-bc: var(--line-2);
+  --btn-fg: var(--fg);
+  --btn-fill: var(--accent);
+  --btn-fill-fg: var(--on-accent);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7em;
+  padding: 0.95em 1.6em;
+  border: 1px solid var(--btn-bc);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border-radius: var(--r);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 0.35s var(--ease), border-color 0.35s var(--ease),
+              transform 0.25s var(--ease);
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  top: 0;
+  bottom: 0;
+  z-index: -1;
+  /* a wave crest riding on a flat body of water */
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='12' viewBox='0 0 180 12'%3E%3Cpath d='M0 12h180V4c-14 0-18 4-31 4S121 2 107 2 83 8 69 8 45 1 31 1 14 5 0 5Z' fill='%23fff'/%3E%3C/svg%3E")
+      repeat-x 0 0 / 180px 12px,
+    linear-gradient(var(--btn-fill), var(--btn-fill)) repeat 0 12px / 100% 100%;
+  transform: translateY(101%);
+  transition: transform 0.5s var(--ease);
+}
+
+.btn:hover::before,
+.btn:focus-visible::before {
+  transform: translateY(0);
+  animation: btnWave 1.6s linear infinite;
+}
+
+@keyframes btnWave {
+  to { background-position: -180px 0, 0 12px; }
+}
+
+.btn:hover,
+.btn:focus-visible {
+  color: var(--btn-fill-fg);
+  border-color: var(--btn-fill);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn:active { transform: translateY(1px); }
+
+/* solid starts full and empties to a paler fill on hover */
+.btn--solid {
+  --btn-bg: var(--accent);
+  --btn-bc: var(--accent);
+  --btn-fg: var(--on-accent);
+  --btn-fill: var(--chrome-200);
+  --btn-fill-fg: var(--on-accent);
+}
+
+.btn--lg {
+  padding: 1.1em 1.9em;
+  font-size: 0.88rem;
+}
+
+.btn--block { width: 100%; }
+
+/* the small square the prototype puts before a label */
+.btn__sq {
+  width: 7px;
+  height: 7px;
+  background: currentColor;
+  flex: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn::before { transition: none; }
+  .btn:hover::before,
+  .btn:focus-visible::before { animation: none; }
+}
+
+
+/* ───────────────────────────────────────────────────────────────
+   BOOKING FORM
+
+   Ported from the .bform block in design/css/variants.css. The
+   container queries there become media queries here, because an
+   artboard is no longer a container inside a board.
+   ─────────────────────────────────────────────────────────── */
+
+.book--form {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.bform {
+  border: 1px solid var(--line);
+  border-radius: calc(var(--r) * 2);
+  background: linear-gradient(180deg, var(--ink-2), var(--ink-1));
+  padding: clamp(1.4rem, 3vw, 2.3rem);
+}
+
+.bform__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.bform__wide { grid-column: 1 / -1; }
+
+.fld {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+.fld input,
+.fld select,
+.fld textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--fg);
+  background: var(--ink);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r);
+  padding: 1.6rem 0.95rem 0.62rem;
+  transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.fld textarea {
+  min-height: 116px;
+  resize: vertical;
+}
+
+.fld input:focus,
+.fld select:focus,
+.fld textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
+}
+
+/* the label rides up out of the field once there is something in it */
+.fld > span {
+  position: absolute;
+  left: 0.95rem;
+  top: 1.08rem;
+  pointer-events: none;
+  font-size: 0.92rem;
+  color: var(--fg-dim);
+  transition: transform 0.22s var(--ease), color 0.22s var(--ease);
+  transform-origin: left top;
+}
+
+.fld input:focus + span,
+.fld input:not(:placeholder-shown) + span,
+.fld textarea:focus + span,
+.fld textarea:not(:placeholder-shown) + span {
+  transform: translateY(-0.78rem) scale(0.68);
+  color: var(--chrome-200);
+}
+
+/* a date input always has a value shape, so it never looks empty */
+.fld input[type="date"] + span {
+  transform: translateY(-0.78rem) scale(0.68);
+  color: var(--chrome-200);
+}
+
+.fld input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.55;
+  cursor: pointer;
+}
+
+.fld.is-bad input,
+.fld.is-bad select,
+.fld.is-bad textarea { border-color: var(--error); }
+
+.fld__err {
+  display: none;
+  margin-top: 0.35rem;
+  padding-left: 0.1rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--error);
+  font-style: normal;
+}
+
+.fld.is-bad .fld__err { display: block; }
+
+.sizes {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  grid-column: 1 / -1;
+}
+
+.sizes legend {
+  padding: 0 0 0.7rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.sizes__row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.sz {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.sz input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.sz__box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  height: 100%;
+  padding: 0.9rem 0.9rem 1rem;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r);
+  background: var(--ink);
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease),
+              transform 0.3s var(--ease);
+}
+
+.sz:hover .sz__box {
+  transform: translateY(-2px);
+  border-color: var(--fg-dim);
+}
+
+.sz input:focus-visible + .sz__box {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.sz input:checked + .sz__box {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+.sz__n {
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+}
+
+.sz__d {
+  font-size: 0.72rem;
+  color: var(--fg-dim);
+}
+
+.sz__p {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 1.05rem;
+  color: var(--fg);
+}
+
+.xtra {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chk {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.chk input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.chk span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.56em 0.9em;
+  border: 1px solid var(--line-2);
+  border-radius: 99px;
+  font-size: 0.78rem;
+  color: var(--fg-mid);
+  transition: border-color 0.3s, color 0.3s, background 0.3s;
+}
+
+.chk span::before {
+  content: "+";
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  opacity: 0.6;
+}
+
+.chk input:checked + span {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+.chk input:checked + span::before {
+  content: "\2713";
+  opacity: 1;
+}
+
+.chk input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.bform__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  margin-top: 1.4rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+}
+
+.total {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.total__k {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.total__v {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 1.9rem;
+  letter-spacing: -0.03em;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.bform__note {
+  flex-basis: 100%;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.bform__done {
+  text-align: center;
+  padding: clamp(1.6rem, 4vw, 3rem) 1rem;
+}
+
+.bform__tick {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1.2rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 0 44px rgba(var(--accent-rgb), 0.5);
+}
+
+.bform__done h3 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+}
+
+.bform__done p {
+  color: var(--fg-mid);
+  margin-top: 0.6rem;
+}
+
+.bform__recap {
+  display: inline-block;
+  margin-top: 1.4rem;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 1rem 1.2rem;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  line-height: 2;
+  color: var(--fg-mid);
+}
+
+.bform__recap b {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .book--form { grid-template-columns: 1fr; }
+  .bform__grid { grid-template-columns: 1fr; }
+  .sizes__row { grid-template-columns: 1fr; }
+  .sz__box {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .sz__p {
+    margin: 0 0 0 auto;
+    padding: 0;
+  }
+  .hero--bleed .hero__over {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

@@ -71,8 +71,9 @@ export default function Home() {
   };
 
   const appointmentData = {
-    title: "Book Your Appointment",
-    subtitle: "Schedule your car wash today and experience the difference our professional service makes."
+    title: "Let's get it filthy clean.",
+    subtitle:
+      "Tell us the car and the postcode. We confirm a slot the same day."
   };
 
   return (

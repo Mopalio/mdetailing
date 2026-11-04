@@ -19,6 +19,19 @@ function getResend(): Resend {
   return client;
 }
 
+/* The booking details are typed by the customer and dropped straight
+   into an HTML email, so they are escaped here: without this a stray
+   angle bracket breaks the layout, and a crafted one injects markup
+   into the mail the business reads. Newlines are kept with
+   white-space: pre-line, since the notes field is multi-line. */
+function esc(v: unknown): string {
+  return String(v ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -34,15 +47,15 @@ export async function POST(request: NextRequest) {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333;">Appointment Confirmation</h2>
-          <p>Dear ${name},</p>
+          <p>Dear ${esc(name)},</p>
           <p>Thank you for booking your car wash appointment with M Detailing!</p>
           
           <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3 style="margin-top: 0;">Appointment Details:</h3>
-            <p><strong>Date:</strong> ${date}</p>
-            <p><strong>Time:</strong> ${time}</p>
-            <p><strong>Car Size:</strong> ${carSize}</p>
-            ${message ? `<p><strong>Special Notes:</strong> ${message}</p>` : ''}
+            <p><strong>Date:</strong> ${esc(date)}</p>
+            <p><strong>Time:</strong> ${esc(time)}</p>
+            <p><strong>Car Size:</strong> ${esc(carSize)}</p>
+            ${message ? `<p style="white-space: pre-line;"><strong>Booking details:</strong><br>${esc(message)}</p>` : ''}
           </div>
           
           <p>We'll contact you shortly to confirm your appointment. If you need to make any changes, please contact us:</p>
@@ -71,13 +84,13 @@ export async function POST(request: NextRequest) {
           
           <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h3 style="margin-top: 0;">Customer Details:</h3>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Date:</strong> ${date}</p>
-            <p><strong>Time:</strong> ${time}</p>
-            <p><strong>Car Size:</strong> ${carSize}</p>
-            ${message ? `<p><strong>Special Notes:</strong> ${message}</p>` : ''}
+            <p><strong>Name:</strong> ${esc(name)}</p>
+            <p><strong>Email:</strong> ${esc(email)}</p>
+            <p><strong>Phone:</strong> ${esc(phone)}</p>
+            <p><strong>Date:</strong> ${esc(date)}</p>
+            <p><strong>Time:</strong> ${esc(time)}</p>
+            <p><strong>Car Size:</strong> ${esc(carSize)}</p>
+            ${message ? `<p style="white-space: pre-line;"><strong>Booking details:</strong><br>${esc(message)}</p>` : ''}
           </div>
         </div>
       `,

@@ -109,17 +109,11 @@ export function Hero({
             animate="show"
             custom={3}
           >
-            <a
-              href={ctaLink}
-              className="inline-flex items-center gap-2.5 rounded-[2px] bg-accent px-6 py-3.5 text-sm font-semibold tracking-tight text-on-accent transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-            >
-              <span className="inline-block h-1.5 w-1.5 bg-on-accent" />
+            <a href={ctaLink} className="btn btn--solid btn--lg">
+              <span className="btn__sq" />
               {ctaText}
             </a>
-            <a
-              href={secondaryCtaLink}
-              className="inline-flex items-center rounded-[2px] border border-line-2 px-6 py-3.5 text-sm font-medium text-fg transition-colors duration-300 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-            >
+            <a href={secondaryCtaLink} className="btn btn--lg">
               {secondaryCtaText}
             </a>
           </motion.div>

@@ -89,11 +89,8 @@ export function Pricing({ title, subtitle, tiers }: PricingProps) {
               <a
                 href="#appointment"
                 className={[
-                  'mt-8 inline-flex items-center justify-center rounded-[2px] px-5 py-3 text-sm font-semibold',
-                  'transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
-                  tier.popular
-                    ? 'bg-accent text-on-accent hover:bg-chrome-200 hover:shadow-[0_10px_30px_-8px_rgba(255,255,255,0.45)]'
-                    : 'border border-line-2 text-fg hover:border-chrome-200 hover:bg-white/12',
+                  'btn btn--block mt-8',
+                  tier.popular ? 'btn--solid' : '',
                 ].join(' ')}
               >
                 Book {tier.name.toLowerCase()}
