@@ -1,7 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
+/* Built on first request, not at module scope: constructing it at import
+   time threw "Missing API key" while `next build` was only collecting page
+   data, which failed the whole build on a machine without the key.
+
+   RESEND_API_KEY is read first because anything prefixed NEXT_PUBLIC_ is
+   meant to be readable in the browser, which is not what a mail API key
+   should be. The old name is still accepted so existing envs keep working. */
+let client: Resend | null = null;
+
+function getResend(): Resend {
+  if (!client) {
+    const key = process.env.RESEND_API_KEY || process.env.NEXT_PUBLIC_RESEND_API_KEY;
+    if (!key) throw new Error('RESEND_API_KEY is not set');
+    client = new Resend(key);
+  }
+  return client;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,7 +27,7 @@ export async function POST(request: NextRequest) {
     console.log('Sending customer email to:', email);
     
     // Send email to customer
-    const customerEmail = await resend.emails.send({
+    const customerEmail = await getResend().emails.send({
       from: 'M Detailing <contact@mdetailing.lu>',
       to: [email],
       subject: 'Appointment Confirmation - M Detailing',
@@ -45,7 +61,7 @@ export async function POST(request: NextRequest) {
     console.log('Sending business email to: mdetailing2025@gmail.com');
     
     // Send notification email to business
-    const businessEmail = await resend.emails.send({
+    const businessEmail = await getResend().emails.send({
       from: 'M Detailing <contact@mdetailing.lu>',
       to: ["mdetailing2025@gmail.com"],
       subject: 'New Appointment Booking',

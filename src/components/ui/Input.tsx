@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { cn } from '@/utils/cn';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -13,7 +13,10 @@ export function Input({
   id, 
   ...props 
 }: InputProps) {
-  const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+  /* useId is stable across the server render and hydration; Math.random()
+     was not, which is what the hydration mismatch warning was about */
+  const generatedId = useId();
+  const inputId = id || generatedId;
 
   return (
     <div className="space-y-2">
