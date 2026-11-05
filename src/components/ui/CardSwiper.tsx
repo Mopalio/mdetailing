@@ -65,7 +65,7 @@ export function CardSwiper({ children, label, className }: CardSwiperProps) {
 
   useEffect(() => {
     const el = scrollerRef.current;
-    if (!el || !swipeable) return;
+    if (!el) return;
 
     const onDown = (e: PointerEvent) => {
       if (e.pointerType !== 'mouse') return;
@@ -73,14 +73,14 @@ export function CardSwiper({ children, label, className }: CardSwiperProps) {
       moved.current = 0;
       startX.current = e.clientX;
       startLeft.current = el.scrollLeft;
-      el.classList.add('is-drag');
+      if (swipeable) el.classList.add('is-drag');
     };
 
     const onMove = (e: PointerEvent) => {
       if (!dragging.current) return;
       const d = e.clientX - startX.current;
       moved.current = Math.max(moved.current, Math.abs(d));
-      el.scrollLeft = startLeft.current - d;
+      if (swipeable) el.scrollLeft = startLeft.current - d;
     };
 
     const endDrag = () => {

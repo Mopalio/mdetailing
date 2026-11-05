@@ -78,6 +78,7 @@ function mount() {
 
   return {
     canvas,
+    image,
     handle,
     progress,
     onFinish,
@@ -283,6 +284,55 @@ describe('the pressure washer', () => {
     flush();
 
     expect(h.latest()).toBe(reached);
+  });
+
+  it('does not reset coverage when the hero image arrives mid-wash', () => {
+    const h = mount();
+
+    pointer(h.canvas, 'pointerdown', 120, 120);
+    flush();
+    pointer(h.canvas, 'pointermove', 300, 180);
+    flush();
+    pointer(h.canvas, 'pointerup', 300, 180);
+    const reached = h.latest();
+    expect(reached).toBeGreaterThan(0);
+
+    h.image.dispatchEvent(new Event('load'));
+    flush();
+
+    expect(h.latest()).toBe(reached);
+    expect(Math.min(...h.progress.slice(1))).toBeGreaterThan(0);
+  });
+
+  it('keeps the trigger held when the hero image arrives mid-wash', () => {
+    const h = mount();
+
+    pointer(h.canvas, 'pointerdown', 120, 120);
+    flush();
+    const before = h.latest();
+    expect(before).toBeGreaterThan(0);
+
+    h.image.dispatchEvent(new Event('load'));
+    flush();
+    pointer(h.canvas, 'pointermove', 300, 180);
+    flush();
+
+    expect(h.latest()).toBeGreaterThan(before);
+  });
+
+  it('still rebuilds when the image load is what gives the frame its height', () => {
+    const h = mount();
+
+    pointer(h.canvas, 'pointerdown', 120, 120);
+    flush();
+    pointer(h.canvas, 'pointerup', 120, 120);
+    expect(h.latest()).toBeGreaterThan(0);
+
+    h.size.h = FRAME_H + 140;
+    h.image.dispatchEvent(new Event('load'));
+    flush();
+
+    expect(h.latest()).toBe(0);
   });
 
   it('reset puts it back to nothing cleaned', () => {

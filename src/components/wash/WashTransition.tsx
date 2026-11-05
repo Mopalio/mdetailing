@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { registerWash, washTo } from './washController';
+import { WASH_SESSION_KEY } from './session';
 
 /* ═══════════════════════════════════════════════════════════════
    WashTransition: the wash, ported from design/js/transition.js.
@@ -33,8 +34,6 @@ import { registerWash, washTo } from './washController';
    clip-path percentages and spawns drips off the blade edge, which
    needs the frame callback.
    ═══════════════════════════════════════════════════════════ */
-
-const SESSION_KEY = 'md-washed';
 
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
@@ -237,7 +236,7 @@ export function WashTransition() {
 
     let seen = false;
     try {
-      seen = sessionStorage.getItem(SESSION_KEY) === '1';
+      seen = sessionStorage.getItem(WASH_SESSION_KEY) === '1';
     } catch {
       /* private mode can throw on access; treat it as a first visit */
     }
@@ -249,7 +248,7 @@ export function WashTransition() {
       root.classList.remove('is-washing', 'is-booting');
     } else {
       try {
-        sessionStorage.setItem(SESSION_KEY, '1');
+        sessionStorage.setItem(WASH_SESSION_KEY, '1');
       } catch {
         /* nothing to do: it just plays again next time */
       }

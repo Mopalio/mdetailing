@@ -72,6 +72,10 @@ Each of these cost real debugging. Changing any of them reintroduces a specific 
 
 10. **`README.md` is the generic Next.js scaffold text** and does not describe this project. This file does.
 
+11. **The intro curtain has two lifts: React, and a CSS animation ten seconds later.** `wash.css` lifts `.wash.is-intro` on its own, because a bundle that fails to load leaves nothing to lift it and `<noscript>` does not fire when scripting is on and only the script is missing. That delay has to stay longer than the longest `arm(...)` watchdog in `WashTransition.tsx`, and it has to stay outside the reduced-motion block. A test asserts both.
+
+12. **`src/components/wash/session.ts` is deliberately not a `'use client'` module.** `layout.tsx` is a server component, and every export of a `'use client'` module reaches a server component as a client reference rather than as a value. The session key and the inline boot script live in a plain module so both sides can import the same one.
+
 ## Environment
 
 Nothing is required to build. All four are runtime only.

@@ -185,8 +185,8 @@ export function mountWasher(els: WasherElements, opts: WasherOptions = {}): Wash
        resolution under any scaled ancestor */
     const nw = Math.round(frame.offsetWidth);
     const nh = Math.round(frame.offsetHeight);
-    if (!nw || !nh) return;
-    if (!force && nw === W && nh === H) return;
+    if (!nw || !nh) return false;
+    if (!force && nw === W && nh === H) return false;
 
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = nw;
@@ -196,6 +196,7 @@ export function mountWasher(els: WasherElements, opts: WasherOptions = {}): Wash
     canvas.style.width = W + 'px';
     canvas.style.height = H + 'px';
     restart();
+    return true;
   }
 
   function restart() {
@@ -212,6 +213,30 @@ export function mountWasher(els: WasherElements, opts: WasherOptions = {}): Wash
     shine?.classList.remove('go');
     hint?.classList.remove('gone');
     jetEl?.classList.remove('on');
+  }
+
+  function repaint() {
+    if (!ctx || !W || !H) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (finished) {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.filter = 'none';
+      ctx.clearRect(0, 0, W, H);
+      return;
+    }
+    paintDirt();
+    if (!cleaned) return;
+    const cw = W / GX;
+    const ch = H / GY;
+    cut();
+    ctx.fillStyle = 'rgba(0,0,0,1)';
+    for (let j = 0; j < GY; j++) {
+      for (let i = 0; i < GX; i++) {
+        if (!grid[j * GX + i]) continue;
+        ctx.fillRect(i * cw, j * ch, cw + 1, ch + 1);
+      }
+    }
+    uncut();
   }
 
   /* ── erasing ────────────────────────────────────────────── */
@@ -456,7 +481,9 @@ export function mountWasher(els: WasherElements, opts: WasherOptions = {}): Wash
   };
   window.addEventListener('resize', onResize);
 
-  const onLoad = () => size(true);
+  const onLoad = () => {
+    if (!size(false)) repaint();
+  };
   if (image.complete && image.naturalWidth) size(true);
   else image.addEventListener('load', onLoad);
   image.addEventListener('error', onLoad);

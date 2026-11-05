@@ -620,6 +620,20 @@
   pointer-events: auto;
 }
 
+.wash-seen .wash.is-intro {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@keyframes washFailsafe {
+  from { opacity: 1; }
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+.wash.is-intro {
+  animation: washFailsafe 600ms linear 10s forwards;
+}
+
 .wash__sheet {
   position: absolute;
   inset: 0;
