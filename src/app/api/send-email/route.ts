@@ -37,8 +37,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, email, phone, carSize, date, time, message } = body;
 
-    console.log('Sending customer email to:', email);
-    
     // Send email to customer
     const customerEmail = await getResend().emails.send({
       from: 'M Detailing <contact@mdetailing.lu>',
@@ -69,10 +67,6 @@ export async function POST(request: NextRequest) {
       `,
     });
 
-    console.log('Customer email sent successfully:', customerEmail);
-
-    console.log('Sending business email to: mdetailing2025@gmail.com');
-    
     // Send notification email to business
     const businessEmail = await getResend().emails.send({
       from: 'M Detailing <contact@mdetailing.lu>',
@@ -96,7 +90,26 @@ export async function POST(request: NextRequest) {
       `,
     });
 
-    console.log('Business email sent successfully:', businessEmail);
+    if (businessEmail.error) {
+      console.error('Business notification rejected:', businessEmail.error);
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            'Your booking did not reach us. Please try again, or send us a message on Instagram.',
+        },
+        { status: 502 }
+      );
+    }
+
+    if (customerEmail.error) {
+      console.error('Customer confirmation rejected:', customerEmail.error);
+      return NextResponse.json({
+        success: true,
+        message:
+          'We have your booking and will contact you shortly. The confirmation email could not be sent, so you will not receive a copy of it.',
+      });
+    }
 
     return NextResponse.json({ 
       success: true, 

@@ -36,6 +36,17 @@ function request(body: unknown) {
   }) as unknown as NextRequest;
 }
 
+/* The SDK resolves rather than rejects when the provider refuses a
+   send: the refusal arrives as { data: null, error }. That is the whole
+   reason this route could report a booking as sent that nobody ever
+   received, and it is why asserting a rejected promise here proves
+   nothing. Verified against resend 4.8 in node_modules. */
+const accepted = () => ({ data: { id: 'mail_test' }, error: null });
+const rejected = (message: string) => ({
+  data: null,
+  error: { name: 'validation_error', message },
+});
+
 /** every html body the route handed the provider during one call */
 function sentHtml() {
   return send.mock.calls.map((call) => String(call[0].html));
@@ -44,7 +55,7 @@ function sentHtml() {
 beforeEach(() => {
   process.env.RESEND_API_KEY = 'test-key-not-a-real-one';
   send.mockReset();
-  send.mockResolvedValue({ id: 'mail_test' });
+  send.mockResolvedValue(accepted());
   vi.spyOn(console, 'log').mockImplementation(() => {});
   vi.spyOn(console, 'error').mockImplementation(() => {});
 });
@@ -91,8 +102,47 @@ describe('POST /api/send-email', () => {
     expect(customer).not.toContain('&lt;');
   });
 
-  it('reports failure rather than claiming the booking was sent', async () => {
-    send.mockRejectedValue(new Error('provider is down'));
+  it('confirms the booking when both mails are accepted', async () => {
+    const response = await POST(request(booking()));
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload.success).toBe(true);
+    expect(payload.message).toMatch(/check your/i);
+  });
+
+  it('reports failure when the business notification is refused', async () => {
+    send.mockResolvedValueOnce(accepted()).mockResolvedValueOnce(rejected('domain is not verified'));
+
+    const response = await POST(request(booking()));
+    const payload = await response.json();
+
+    expect(response.status).toBe(502);
+    expect(payload.success).toBe(false);
+  });
+
+  it('does not promise a confirmation email that was refused', async () => {
+    send.mockResolvedValueOnce(rejected('recipient address is invalid')).mockResolvedValueOnce(accepted());
+
+    const response = await POST(request(booking()));
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload.success).toBe(true);
+    expect(payload.message).not.toMatch(/check your/i);
+  });
+
+  it('still tells the business about a booking whose confirmation was refused', async () => {
+    send.mockResolvedValueOnce(rejected('recipient address is invalid')).mockResolvedValueOnce(accepted());
+
+    await POST(request(booking()));
+
+    expect(send).toHaveBeenCalledTimes(2);
+    expect(String(send.mock.calls[1][0].to)).toContain('mdetailing2025@gmail.com');
+  });
+
+  it('reports failure when the provider throws', async () => {
+    send.mockRejectedValue(new Error('network is down'));
 
     const response = await POST(request(booking()));
     const payload = await response.json();
